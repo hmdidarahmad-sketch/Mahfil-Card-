@@ -46,17 +46,6 @@
     text-align:center;
     margin-bottom: 20px;
   }
-  header .badge{
-    display:inline-block;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    color: var(--teal-900);
-    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-    padding: 4px 14px;
-    border-radius: 999px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
   header h1{
     font-size: 1.5rem;
     margin: 0 0 6px;
@@ -292,7 +281,6 @@
 
 <div class="wrap">
   <header>
-    <span class="badge">ঈদে মিলাদুন্নবী মাহফিল</span>
     <h1>ফটো কার্ড মেকার</h1>
     <p>ছবি আপলোড করুন, নাম লিখুন — নিজের কার্ড বানিয়ে নিন</p>
     <div class="rule"></div>
@@ -325,7 +313,7 @@
         <input type="range" id="zoom-slider" min="1" max="3" step="0.01" value="1">
       </div>
     </div>
-    <p class="hint">আপলোডের পর ছবি টেনে (ড্র্যাগ করে) সঠিক জায়গায় বসান, এবং জুম স্লাইডার দিয়ে ছোট-বড় করুন।</p>
+    <p class="hint">আপলোডের পর ছবি টেনে (ড্র্যাগ করে) সঠিক জায়গায় বসান, এবং জুম স্লাইডার দিয়ে ছোট-বড় করুন.</p>
   </div>
 
   <div class="panel" id="name-panel">
@@ -348,7 +336,7 @@
 <div class="bottom-bar">
   <div class="bottom-bar-inner">
     <button class="btn-gold" id="download-btn" disabled>⬇️ PNG ডাউনলোড করুন</button>
-    <p class="hint" id="download-hint">ছবি আপলোড করলে ডাউনলোড বাটন চালু হবে।</p>
+    <p class="hint" id="download-hint">ছবি আপলোড করলে ডাউনলোড বাটন চালু হবে.</p>
   </div>
 </div>
 
@@ -358,8 +346,8 @@
   // ---------- Geometry (2576x2576 canvas) ----------
   const NATIVE_SIZE = 2576;
 
-  // আপডেট করা ফটো বক্স (ছবি ফ্রেমের ভেতরে ঠিকভাবে বসানোর জন্য ছোট ও সমন্বিত মাপ)
-  const PHOTO_BOX = { x: 85, y: 1210, w: 515, h: 685, r: 45 };
+  // আপনার মাপা অনুপাত (২৬% এবং ৩২%) অনুযায়ী সামঞ্জস্যপূর্ণ মাপ
+  const PHOTO_BOX = { x: 92, y: 1260, w: 670, h: 824, r: 50 };
 
   // নামের জায়গা
   const NAME_AREA = { x: 100, y: 2065, w: 1850, h: 260 };
@@ -379,9 +367,9 @@
   const bgImg = new Image();
   let bgReady = false;
 
-  let photo = null; // {img, naturalW, naturalH}
-  let zoom = 1;       // 1..3 relative to cover-fit
-  let panX = 0, panY = 0; // in native px, relative to box center
+  let photo = null;
+  let zoom = 1;
+  let panX = 0, panY = 0;
   let baseScale = 1;
 
   let nameText = '';
@@ -480,7 +468,6 @@
     drawName();
   }
 
-  // ---------- Load background ----------
   bgImg.onload = function(){
     bgReady = true;
     loadingOverlay.classList.add('hidden');
@@ -492,7 +479,6 @@
   };
   bgImg.src = 'bg2.jpg';
 
-  // ---------- Load custom font ----------
   if ('fonts' in document){
     const f = new FontFace('SolaimanLipi-Bold', "url('SolaimanLipi-Bold.ttf')", { weight: 'bold' });
     f.load().then(function(loaded){
@@ -501,7 +487,6 @@
     }).catch(function(){});
   }
 
-  // ---------- Photo upload ----------
   pickPhotoBtn.addEventListener('click', function(){ fileInput.click(); });
 
   fileInput.addEventListener('change', function(e){
@@ -545,7 +530,6 @@
     redraw();
   });
 
-  // ---------- Drag to reposition photo (mouse + touch) ----------
   let dragging = false;
   let dragStartX = 0, dragStartY = 0;
   let startPanX = 0, startPanY = 0;
@@ -612,7 +596,6 @@
   }, { passive: false });
   canvas.addEventListener('touchend', dragEnd);
 
-  // Pinch to zoom
   let pinchStartDist = null;
   let pinchStartZoom = 1;
   function dist(t0, t1){
@@ -638,26 +621,11 @@
     redraw();
   }
 
-  // ---------- Name input ----------
   nameInput.addEventListener('input', function(){
     nameText = nameInput.value.trim();
     charCount.textContent = nameInput.value.length;
     redraw();
   });
-
-  // ---------- Download ----------
-  async function saveViaClaudeCapability(blob, filename){
-    try {
-      if (window.claude && typeof window.claude.use === 'function'){
-        const downloads = await window.claude.use('downloads');
-        if (downloads){
-          await downloads.save({ filename: filename, data: blob });
-          return true;
-        }
-      }
-    } catch (e){}
-    return false;
-  }
 
   function saveViaAnchor(blob, filename){
     const link = document.createElement('a');
@@ -670,16 +638,13 @@
   }
 
   downloadBtn.addEventListener('click', function(){
-    canvas.toBlob(async function(blob){
+    canvas.toBlob(function(blob){
       if (!blob){
         alert('ডাউনলোড তৈরি করা যায়নি। আবার চেষ্টা করুন।');
         return;
       }
       const fileName = (nameText ? nameText.replace(/[^\wঀ-৿\- ]/g, '').trim().replace(/\s+/g, '-') : 'photo-card') + '.png';
-      const savedByCapability = await saveViaClaudeCapability(blob, fileName);
-      if (!savedByCapability){
-        saveViaAnchor(blob, fileName);
-      }
+      saveViaAnchor(blob, fileName);
     }, 'image/png', 1.0);
   });
 
