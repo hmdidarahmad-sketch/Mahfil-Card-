@@ -147,7 +147,7 @@
   }
 
   button, .btn{
-    font-family: inherit;
+    font-family: 'SolaimanLipi-Bold','Noto Sans Bengali', system-ui, -apple-system, sans-serif;
     font-weight: bold;
     border: none;
     border-radius: 12px;
@@ -313,7 +313,7 @@
         <input type="range" id="zoom-slider" min="1" max="3" step="0.01" value="1">
       </div>
     </div>
-    <p class="hint">আপলোডের পর ছবি টেনে (ড্র্যাগ করে) সঠিক জায়গায় বসান, এবং জুম স্লাইডার দিয়ে ছোট-বড় করুন.</p>
+    <p class="hint">আপলোডের পর ছবি টেনে (ড্র্যাগ করে) সঠিক জায়গায় বসান, এবং জুম স্লাইডার দিয়ে ছোট-বড় করুন।</p>
   </div>
 
   <div class="panel" id="name-panel">
@@ -336,33 +336,48 @@
 <div class="bottom-bar">
   <div class="bottom-bar-inner">
     <button class="btn-gold" id="download-btn" disabled>⬇️ PNG ডাউনলোড করুন</button>
-    <p class="hint" id="download-hint">ছবি আপলোড করলে ডাউনলোড বাটন চালু হবে.</p>
+    <p class="hint" id="download-hint">ছবি আপলোড করলে ডাউনলোড বাটন চালু হবে।</p>
   </div>
 </div>
 
 <script>
 (function(){
 
-  // ---------- Geometry (2576x2576 canvas) ----------
-  const NATIVE_SIZE = 2576;
+  // ---------- Geometry (3282x3283 canvas) ----------
+  const CANVAS_W = 3282;
+  const CANVAS_H = 3283;
+  const SCALE_X = CANVAS_W / 2576;
+  const SCALE_Y = CANVAS_H / 2576;
+  const SCALE_AVG = (SCALE_X + SCALE_Y) / 2;
 
   // ছবি বসার ফ্রেম (ওপরে তোলা ও কোনা আরও গোল করা হয়েছে)
-  const PHOTO_BOX = { x: 92, y: 1215, w: 670, h: 824, r: 75 };
+  const PHOTO_BOX = {
+    x: Math.round(92 * SCALE_X),
+    y: Math.round(1215 * SCALE_Y),
+    w: Math.round(670 * SCALE_X),
+    h: Math.round(824 * SCALE_Y),
+    r: Math.round(75 * SCALE_AVG)
+  };
 
   // নামের জায়গা
-  const NAME_AREA = { x: 100, y: 2065, w: 1850, h: 260 };
+  const NAME_AREA = {
+    x: Math.round(100 * SCALE_X),
+    y: Math.round(2065 * SCALE_Y),
+    w: Math.round(1850 * SCALE_X),
+    h: Math.round(260 * SCALE_Y)
+  };
   const NAME_CENTER_X = NAME_AREA.x + NAME_AREA.w / 2;
   const NAME_CENTER_Y = NAME_AREA.y + NAME_AREA.h / 2;
-  const NAME_MAX_WIDTH = NAME_AREA.w - 60;
-  const NAME_MAX_FONT = 150;
-  const NAME_MIN_FONT = 48;
+  const NAME_MAX_WIDTH = NAME_AREA.w - Math.round(60 * SCALE_X);
+  const NAME_MAX_FONT = Math.round(150 * SCALE_AVG);
+  const NAME_MIN_FONT = Math.round(48 * SCALE_AVG);
   const NAME_COLOR = '#7a1211';
 
   // ---------- State ----------
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = NATIVE_SIZE;
-  canvas.height = NATIVE_SIZE;
+  canvas.width = CANVAS_W;
+  canvas.height = CANVAS_H;
 
   const bgImg = new Image();
   let bgReady = false;
@@ -450,7 +465,7 @@
     ctx.textBaseline = 'middle';
     ctx.fillText(nameText, NAME_CENTER_X, NAME_CENTER_Y + size * 0.06);
 
-    const lineW = Math.min(NAME_MAX_WIDTH * 0.5, ctx.measureText(nameText).width + 80);
+    const lineW = Math.min(NAME_MAX_WIDTH * 0.5, ctx.measureText(nameText).width + 80 * SCALE_X);
     const lineY = NAME_CENTER_Y + size * 0.62;
     const grad = ctx.createLinearGradient(NAME_CENTER_X - lineW / 2, 0, NAME_CENTER_X + lineW / 2, 0);
     grad.addColorStop(0, 'rgba(212,175,90,0)');
@@ -462,8 +477,8 @@
 
   function redraw(){
     if (!bgReady) return;
-    ctx.clearRect(0, 0, NATIVE_SIZE, NATIVE_SIZE);
-    ctx.drawImage(bgImg, 0, 0, NATIVE_SIZE, NATIVE_SIZE);
+    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+    ctx.drawImage(bgImg, 0, 0, CANVAS_W, CANVAS_H);
     drawPhoto();
     drawName();
   }
@@ -534,9 +549,14 @@
   let dragStartX = 0, dragStartY = 0;
   let startPanX = 0, startPanY = 0;
 
-  function canvasScaleRatio(){
+  function canvasScaleRatioX(){
     const rect = canvas.getBoundingClientRect();
-    return NATIVE_SIZE / rect.width;
+    return CANVAS_W / rect.width;
+  }
+
+  function canvasScaleRatioY(){
+    const rect = canvas.getBoundingClientRect();
+    return CANVAS_H / rect.height;
   }
 
   function pointerPos(e){
@@ -547,9 +567,8 @@
   }
 
   function insideBox(px, py){
-    const ratio = canvasScaleRatio();
-    const nx = px * ratio;
-    const ny = py * ratio;
+    const nx = px * canvasScaleRatioX();
+    const ny = py * canvasScaleRatioY();
     return nx >= PHOTO_BOX.x && nx <= PHOTO_BOX.x + PHOTO_BOX.w &&
            ny >= PHOTO_BOX.y && ny <= PHOTO_BOX.y + PHOTO_BOX.h;
   }
@@ -569,9 +588,8 @@
   function dragMove(e){
     if (!dragging) return;
     const p = pointerPos(e);
-    const ratio = canvasScaleRatio();
-    panX = startPanX + (p.x - dragStartX) * ratio;
-    panY = startPanY + (p.y - dragStartY) * ratio;
+    panX = startPanX + (p.x - dragStartX) * canvasScaleRatioX();
+    panY = startPanY + (p.y - dragStartY) * canvasScaleRatioY();
     clampPan();
     redraw();
     e.preventDefault();
