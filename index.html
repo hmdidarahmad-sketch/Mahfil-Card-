@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ফটো কার্ড মেকার — ওয়াজ মাহফিল</title>
+<style>
+  @font-face {
+    font-family: 'SolaimanLipi-Bold';
+    src: url('assets/SolaimanLipi-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-display: swap;
+  }
+
+  :root{
+    --teal-900: #07211f;
+    --teal-800: #0d322e;
+    --teal-700: #123f3a;
+    --teal-600: #175048;
+    --gold: #d4af5a;
+    --gold-soft: #e9cd8d;
+    --maroon: #8a1620;
+    --text: #f3efe6;
+    --muted: #a8b8b3;
+    --radius: 16px;
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html,body{
+    margin:0; padding:0;
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #163c37 0%, var(--teal-900) 55%, #061614 100%);
+    color: var(--text);
+    font-family: 'SolaimanLipi-Bold','Noto Sans Bengali', system-ui, -apple-system, sans-serif;
+    min-height:100vh;
+  }
+
+  .wrap{
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 22px 16px 90px;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom: 20px;
+  }
+  header .badge{
+    display:inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--teal-900);
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    padding: 4px 14px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  header h1{
+    font-size: 1.5rem;
+    margin: 0 0 6px;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+  header p{
+    margin:0;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  header .rule{
+    width: 72px;
+    height: 3px;
+    margin: 14px auto 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .card-stage{
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    margin: 22px auto 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,175,90,0.25);
+  }
+
+  #canvas{
+    display:block;
+    width: 100%;
+    height: auto;
+    background:#fff;
+    touch-action: none;
+  }
+
+  .stage-overlay{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    color:#fff;
+    font-size: 0.95rem;
+    background: rgba(5,15,14,0.55);
+    text-align:center;
+    padding: 20px;
+  }
+  .stage-overlay.hidden{ display:none; }
+
+  .panel{
+    position: relative;
+    background: linear-gradient(165deg, var(--teal-700), var(--teal-800));
+    border: 1px solid rgba(212,175,90,0.18);
+    border-radius: var(--radius);
+    padding: 18px 18px 20px;
+    margin-top: 16px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+  }
+
+  .step-head{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .step-num{
+    flex: 0 0 auto;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    color: var(--teal-900);
+    font-weight: bold;
+    font-size: 0.85rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .step-title{
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+  }
+  .step-sub{
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .row{
+    display:flex;
+    gap:10px;
+    flex-wrap: wrap;
+    align-items:center;
+  }
+
+  button, .btn{
+    font-family: inherit;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    padding: 13px 18px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+  }
+  button:active, .btn:active{ transform: scale(0.97); }
+
+  .btn-primary{
+    background: linear-gradient(135deg, #1d7a6c, #0e4a41);
+    color:#fff;
+    flex: 1 1 auto;
+    box-shadow: 0 6px 16px rgba(14,74,65,0.45);
+  }
+  .btn-primary:hover{ filter: brightness(1.1); }
+
+  .btn-gold{
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    color: #2b1d02;
+    width: 100%;
+    font-size: 1.08rem;
+    padding: 17px 18px;
+    box-shadow: 0 10px 26px rgba(212,175,90,0.35);
+  }
+  .btn-gold:hover{ filter: brightness(1.05); }
+  .btn-gold:disabled{
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow:none;
+  }
+
+  .btn-ghost{
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .btn-ghost:hover{ background: rgba(255,255,255,0.14); }
+
+  input[type="text"]{
+    width: 100%;
+    font-family: 'SolaimanLipi-Bold','Noto Sans Bengali', sans-serif;
+    font-size: 1.1rem;
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+    outline:none;
+  }
+  input[type="text"]::placeholder{ color: rgba(255,255,255,0.4); }
+  input[type="text"]:focus{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212,175,90,0.18);
+  }
+
+  .slider-row{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .slider-row label{
+    font-size: 0.85rem;
+    color: var(--muted);
+    width: 60px;
+    flex-shrink:0;
+  }
+  input[type="range"]{
+    flex:1;
+    accent-color: var(--gold);
+    height: 4px;
+  }
+
+  .hint{
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 10px;
+    line-height:1.55;
+  }
+
+  .char-count{
+    text-align:right;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+
+  footer{
+    text-align:center;
+    color: var(--muted);
+    font-size: 0.73rem;
+    margin-top: 26px;
+    line-height: 1.6;
+  }
+
+  #file-input{ display:none; }
+
+  .spinner{
+    width: 32px; height:32px;
+    border-radius:50%;
+    border: 3px solid rgba(255,255,255,0.25);
+    border-top-color: var(--gold);
+    animation: spin 0.8s linear infinite;
+    margin-right: 10px;
+    flex-shrink:0;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .bottom-bar{
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    padding: 16px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(180deg, rgba(7,33,31,0) 0%, var(--teal-900) 38%, var(--teal-900) 100%);
+  }
+  .bottom-bar-inner{
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .bottom-bar .hint{
+    text-align:center;
+    margin: 8px 0 0;
+  }
+
+  body{ padding-bottom: 128px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="badge">ঈদে মিলাদুন্নবী মাহফিল</span>
+    <h1>ফটো কার্ড মেকার</h1>
+    <p>ছবি আপলোড করুন, নাম লিখুন — নিজের কার্ড বানিয়ে নিন</p>
+    <div class="rule"></div>
+  </header>
+
+  <div class="card-stage" id="stage">
+    <canvas id="canvas"></canvas>
+    <div class="stage-overlay" id="loading-overlay">
+      <div class="spinner"></div> ডিজাইন লোড হচ্ছে...
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="step-head">
+      <div class="step-num">১</div>
+      <div>
+        <div class="step-title">ছবি আপলোড করুন</div>
+        <div class="step-sub">নিজের ছবি বেছে নিয়ে বক্সে বসান</div>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn-primary" id="pick-photo-btn">📷 ছবি বেছে নিন</button>
+      <button class="btn-ghost" id="reset-photo-btn" style="display:none;">মুছে ফেলুন</button>
+    </div>
+    <input type="file" id="file-input" accept="image/*">
+
+    <div id="zoom-controls" style="display:none;">
+      <div class="slider-row">
+        <label>জুম</label>
+        <input type="range" id="zoom-slider" min="1" max="3" step="0.01" value="1">
+      </div>
+    </div>
+    <p class="hint">আপলোডের পর ছবি টেনে (ড্র্যাগ করে) সঠিক জায়গায় বসান, এবং জুম স্লাইডার দিয়ে ছোট-বড় করুন।</p>
+  </div>
+
+  <div class="panel" id="name-panel">
+    <div class="step-head">
+      <div class="step-num">২</div>
+      <div>
+        <div class="step-title">নাম লিখুন</div>
+        <div class="step-sub">কার্ডে আপনার নাম দেখানো হবে</div>
+      </div>
+    </div>
+    <input type="text" id="name-input" placeholder="এখানে আপনার নাম লিখুন..." maxlength="40">
+    <div class="char-count"><span id="char-count">0</span>/40</div>
+  </div>
+
+  <footer>
+    সম্পূর্ণ প্রসেসিং আপনার ব্রাউজারেই হয় — কোনো ছবি বা তথ্য সার্ভারে পাঠানো হয় না।
+  </footer>
+</div>
+
+<div class="bottom-bar">
+  <div class="bottom-bar-inner">
+    <button class="btn-gold" id="download-btn" disabled>⬇️ PNG ডাউনলোড করুন</button>
+    <p class="hint" id="download-hint">ছবি আপলোড করলে ডাউনলোড বাটন চালু হবে।</p>
+  </div>
+</div>
+
+<script>
+(function(){
+
+  // ---------- Geometry (native pixel coordinates measured on assets/bg2.jpg, 2576x2576) ----------
+  const NATIVE_SIZE = 2576;
+
+  // Photo placeholder box (outer border bbox measured at x:89-783, y:1080-2021)
+  // Inner fill area is slightly inset so the original red border stays fully visible.
+  const PHOTO_BOX = { x: 101, y: 1092, w: 670, h: 917, r: 65 };
+
+  // The original design has no name field. This is a blank area of plain
+  // background directly below the photo box (measured clear of all artwork,
+  // between the box's bottom border and the printed "আপনারা সকলেই আমন্ত্রিত!" line),
+  // used to place the user's name without touching any existing element.
+  const NAME_AREA = { x: 100, y: 2065, w: 1850, h: 260 };
+  const NAME_CENTER_X = NAME_AREA.x + NAME_AREA.w / 2;
+  const NAME_CENTER_Y = NAME_AREA.y + NAME_AREA.h / 2;
+  const NAME_MAX_WIDTH = NAME_AREA.w - 60;
+  const NAME_MAX_FONT = 150;
+  const NAME_MIN_FONT = 48;
+  const NAME_COLOR = '#7a1211';
+
+  // ---------- State ----------
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = NATIVE_SIZE;
+  canvas.height = NATIVE_SIZE;
+
+  const bgImg = new Image();
+  let bgReady = false;
+
+  let photo = null; // {img, naturalW, naturalH}
+  let zoom = 1;       // 1..3 relative to cover-fit
+  let panX = 0, panY = 0; // in native px, relative to box center
+  let baseScale = 1;
+
+  let nameText = '';
+
+  const loadingOverlay = document.getElementById('loading-overlay');
+  const downloadBtn = document.getElementById('download-btn');
+  const downloadHint = document.getElementById('download-hint');
+  const pickPhotoBtn = document.getElementById('pick-photo-btn');
+  const resetPhotoBtn = document.getElementById('reset-photo-btn');
+  const fileInput = document.getElementById('file-input');
+  const zoomControls = document.getElementById('zoom-controls');
+  const zoomSlider = document.getElementById('zoom-slider');
+  const nameInput = document.getElementById('name-input');
+  const charCount = document.getElementById('char-count');
+
+  function roundedRectPath(c, x, y, w, h, r){
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+
+  function updateDownloadState(){
+    if (photo && bgReady){
+      downloadBtn.disabled = false;
+      downloadHint.textContent = 'কার্ড প্রস্তুত — এখনই ডাউনলোড করুন।';
+    } else {
+      downloadBtn.disabled = true;
+      downloadHint.textContent = 'ছবি আপলোড করলে ডাউনলোড বাটন চালু হবে।';
+    }
+  }
+
+  function clampPan(){
+    if (!photo) return;
+    const drawW = photo.naturalW * baseScale * zoom;
+    const drawH = photo.naturalH * baseScale * zoom;
+    const maxPanX = Math.max(0, (drawW - PHOTO_BOX.w) / 2);
+    const maxPanY = Math.max(0, (drawH - PHOTO_BOX.h) / 2);
+    panX = Math.min(maxPanX, Math.max(-maxPanX, panX));
+    panY = Math.min(maxPanY, Math.max(-maxPanY, panY));
+  }
+
+  function drawPhoto(){
+    if (!photo) return;
+    const boxCenterX = PHOTO_BOX.x + PHOTO_BOX.w / 2;
+    const boxCenterY = PHOTO_BOX.y + PHOTO_BOX.h / 2;
+    const drawW = photo.naturalW * baseScale * zoom;
+    const drawH = photo.naturalH * baseScale * zoom;
+    const imgCenterX = boxCenterX + panX;
+    const imgCenterY = boxCenterY + panY;
+
+    ctx.save();
+    roundedRectPath(ctx, PHOTO_BOX.x, PHOTO_BOX.y, PHOTO_BOX.w, PHOTO_BOX.h, PHOTO_BOX.r);
+    ctx.clip();
+    ctx.drawImage(photo.img, imgCenterX - drawW / 2, imgCenterY - drawH / 2, drawW, drawH);
+    ctx.restore();
+  }
+
+  function fitFontSize(text, maxWidth, maxFont, minFont){
+    let size = maxFont;
+    while (size > minFont){
+      ctx.font = `bold ${size}px 'SolaimanLipi-Bold', 'Noto Sans Bengali', sans-serif`;
+      if (ctx.measureText(text).width <= maxWidth) break;
+      size -= 2;
+    }
+    return size;
+  }
+
+  function drawName(){
+    if (!nameText) return;
+    const size = fitFontSize(nameText, NAME_MAX_WIDTH, NAME_MAX_FONT, NAME_MIN_FONT);
+    ctx.font = `bold ${size}px 'SolaimanLipi-Bold', 'Noto Sans Bengali', sans-serif`;
+    ctx.fillStyle = NAME_COLOR;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(nameText, NAME_CENTER_X, NAME_CENTER_Y + size * 0.06);
+
+    // small decorative underline to make the added name feel designed-in
+    const lineW = Math.min(NAME_MAX_WIDTH * 0.5, ctx.measureText(nameText).width + 80);
+    const lineY = NAME_CENTER_Y + size * 0.62;
+    const grad = ctx.createLinearGradient(NAME_CENTER_X - lineW / 2, 0, NAME_CENTER_X + lineW / 2, 0);
+    grad.addColorStop(0, 'rgba(212,175,90,0)');
+    grad.addColorStop(0.5, 'rgba(212,175,90,0.9)');
+    grad.addColorStop(1, 'rgba(212,175,90,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(NAME_CENTER_X - lineW / 2, lineY, lineW, Math.max(3, size * 0.03));
+  }
+
+  function redraw(){
+    if (!bgReady) return;
+    ctx.clearRect(0, 0, NATIVE_SIZE, NATIVE_SIZE);
+    ctx.drawImage(bgImg, 0, 0, NATIVE_SIZE, NATIVE_SIZE);
+    drawPhoto();
+    drawName();
+  }
+
+  // ---------- Load background ----------
+  bgImg.onload = function(){
+    bgReady = true;
+    loadingOverlay.classList.add('hidden');
+    redraw();
+    updateDownloadState();
+  };
+  bgImg.onerror = function(){
+    loadingOverlay.innerHTML = 'ডিজাইন লোড করা যায়নি।';
+  };
+  bgImg.src = 'assets/bg2.jpg';
+
+  // ---------- Load custom font ----------
+  if ('fonts' in document){
+    const f = new FontFace('SolaimanLipi-Bold', "url('assets/SolaimanLipi-Bold.ttf')", { weight: 'bold' });
+    f.load().then(function(loaded){
+      document.fonts.add(loaded);
+      redraw();
+    }).catch(function(){ /* fallback font will be used */ });
+  }
+
+  // ---------- Photo upload ----------
+  pickPhotoBtn.addEventListener('click', function(){ fileInput.click(); });
+
+  fileInput.addEventListener('change', function(e){
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = function(){
+      photo = { img: img, naturalW: img.naturalWidth, naturalH: img.naturalHeight };
+      baseScale = Math.max(PHOTO_BOX.w / photo.naturalW, PHOTO_BOX.h / photo.naturalH);
+      zoom = 1;
+      panX = 0;
+      panY = 0;
+      zoomSlider.value = 1;
+      zoomControls.style.display = 'block';
+      resetPhotoBtn.style.display = 'inline-block';
+      pickPhotoBtn.textContent = '📷 অন্য ছবি বাছুন';
+      redraw();
+      updateDownloadState();
+      URL.revokeObjectURL(url);
+    };
+    img.onerror = function(){
+      alert('ছবিটি লোড করা গেল না। অন্য ছবি দিয়ে আবার চেষ্টা করুন।');
+    };
+    img.src = url;
+    // allow re-selecting the same file later
+    fileInput.value = '';
+  });
+
+  resetPhotoBtn.addEventListener('click', function(){
+    photo = null;
+    zoomControls.style.display = 'none';
+    resetPhotoBtn.style.display = 'none';
+    pickPhotoBtn.textContent = '📷 ছবি বেছে নিন';
+    redraw();
+    updateDownloadState();
+  });
+
+  zoomSlider.addEventListener('input', function(){
+    zoom = parseFloat(zoomSlider.value);
+    clampPan();
+    redraw();
+  });
+
+  // ---------- Drag to reposition photo (mouse + touch) ----------
+  let dragging = false;
+  let dragStartX = 0, dragStartY = 0;
+  let startPanX = 0, startPanY = 0;
+
+  function canvasScaleRatio(){
+    const rect = canvas.getBoundingClientRect();
+    return NATIVE_SIZE / rect.width;
+  }
+
+  function pointerPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+    const clientY = (e.touches ? e.touches[0].clientY : e.clientY);
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  function insideBox(px, py){
+    const ratio = canvasScaleRatio();
+    const nx = px * ratio;
+    const ny = py * ratio;
+    return nx >= PHOTO_BOX.x && nx <= PHOTO_BOX.x + PHOTO_BOX.w &&
+           ny >= PHOTO_BOX.y && ny <= PHOTO_BOX.y + PHOTO_BOX.h;
+  }
+
+  function dragStart(e){
+    if (!photo) return;
+    const p = pointerPos(e);
+    if (!insideBox(p.x, p.y)) return;
+    dragging = true;
+    dragStartX = p.x;
+    dragStartY = p.y;
+    startPanX = panX;
+    startPanY = panY;
+    e.preventDefault();
+  }
+
+  function dragMove(e){
+    if (!dragging) return;
+    const p = pointerPos(e);
+    const ratio = canvasScaleRatio();
+    panX = startPanX + (p.x - dragStartX) * ratio;
+    panY = startPanY + (p.y - dragStartY) * ratio;
+    clampPan();
+    redraw();
+    e.preventDefault();
+  }
+
+  function dragEnd(){
+    dragging = false;
+  }
+
+  canvas.addEventListener('mousedown', dragStart);
+  window.addEventListener('mousemove', dragMove);
+  window.addEventListener('mouseup', dragEnd);
+
+  canvas.addEventListener('touchstart', dragStart, { passive: false });
+  canvas.addEventListener('touchmove', function(e){
+    if (e.touches.length === 2){
+      handlePinch(e);
+      e.preventDefault();
+      return;
+    }
+    dragMove(e);
+  }, { passive: false });
+  canvas.addEventListener('touchend', dragEnd);
+
+  // Pinch to zoom
+  let pinchStartDist = null;
+  let pinchStartZoom = 1;
+  function dist(t0, t1){
+    const dx = t0.clientX - t1.clientX;
+    const dy = t0.clientY - t1.clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+  canvas.addEventListener('touchstart', function(e){
+    if (e.touches.length === 2){
+      pinchStartDist = dist(e.touches[0], e.touches[1]);
+      pinchStartZoom = zoom;
+      dragging = false;
+    }
+  }, { passive: false });
+  function handlePinch(e){
+    if (!photo || pinchStartDist == null) return;
+    const d = dist(e.touches[0], e.touches[1]);
+    let newZoom = pinchStartZoom * (d / pinchStartDist);
+    newZoom = Math.min(3, Math.max(1, newZoom));
+    zoom = newZoom;
+    zoomSlider.value = zoom.toFixed(2);
+    clampPan();
+    redraw();
+  }
+
+  // ---------- Name input ----------
+  nameInput.addEventListener('input', function(){
+    nameText = nameInput.value.trim();
+    charCount.textContent = nameInput.value.length;
+    redraw();
+  });
+
+  // ---------- Download ----------
+  // Works two ways: inside the Claude artifact preview sandbox, plain
+  // <a download> links don't save anything, so we use the `downloads`
+  // capability there; on a normal host (GitHub Pages, local file, etc.)
+  // window.claude is absent and we fall back to the ordinary anchor download.
+  async function saveViaClaudeCapability(blob, filename){
+    try {
+      if (window.claude && typeof window.claude.use === 'function'){
+        const downloads = await window.claude.use('downloads');
+        if (downloads){
+          await downloads.save({ filename: filename, data: blob });
+          return true;
+        }
+      }
+    } catch (e){ /* fall through to the normal download */ }
+    return false;
+  }
+
+  function saveViaAnchor(blob, filename){
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(function(){ URL.revokeObjectURL(link.href); }, 2000);
+  }
+
+  downloadBtn.addEventListener('click', function(){
+    canvas.toBlob(async function(blob){
+      if (!blob){
+        alert('ডাউনলোড তৈরি করা যায়নি। আবার চেষ্টা করুন।');
+        return;
+      }
+      const fileName = (nameText ? nameText.replace(/[^\wঀ-৿\- ]/g, '').trim().replace(/\s+/g, '-') : 'photo-card') + '.png';
+      const savedByCapability = await saveViaClaudeCapability(blob, fileName);
+      if (!savedByCapability){
+        saveViaAnchor(blob, fileName);
+      }
+    }, 'image/png', 1.0);
+  });
+
+})();
+</script>
+</body>
+</html>
