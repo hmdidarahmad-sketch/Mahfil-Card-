@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -7,7 +8,7 @@
 <style>
   @font-face {
     font-family: 'SolaimanLipi-Bold';
-    src: url('SolaimanLipi-Bold.ttf') format('truetype');
+    src: url('assets/SolaimanLipi-Bold.ttf') format('truetype');
     font-weight: bold;
     font-display: swap;
   }
@@ -39,41 +40,34 @@
   .wrap{
     max-width: 640px;
     margin: 0 auto;
-    padding: 22px 16px 90px;
+    padding: 5px 12px 68px;
   }
 
   header{
     text-align:center;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
   }
   header h1{
-    font-size: 1.5rem;
-    margin: 0 0 6px;
+    font-size: 1.12rem;
+    margin: 0 0 2px;
     color: #fff;
     letter-spacing: 0.01em;
   }
   header p{
     margin:0;
     color: var(--muted);
-    font-size: 0.88rem;
-  }
-  header .rule{
-    width: 72px;
-    height: 3px;
-    margin: 14px auto 0;
-    border-radius: 999px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    font-size: 0.76rem;
   }
 
   .card-stage{
     position: relative;
     width: 100%;
-    max-width: 520px;
-    margin: 22px auto 0;
-    border-radius: var(--radius);
+    max-width: 340px;
+    margin: 6px auto 0;
+    border-radius: 12px;
     overflow: hidden;
     background: #000;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,175,90,0.25);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,175,90,0.25);
   }
 
   #canvas{
@@ -103,40 +97,35 @@
     position: relative;
     background: linear-gradient(165deg, var(--teal-700), var(--teal-800));
     border: 1px solid rgba(212,175,90,0.18);
-    border-radius: var(--radius);
-    padding: 18px 18px 20px;
-    margin-top: 16px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 9px 14px;
+    margin-top: 7px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.22);
   }
 
   .step-head{
     display:flex;
     align-items:center;
-    gap: 10px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 6px;
   }
   .step-num{
     flex: 0 0 auto;
-    width: 28px; height: 28px;
+    width: 22px; height: 22px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--gold-soft), var(--gold));
     color: var(--teal-900);
     font-weight: bold;
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     display:flex;
     align-items:center;
     justify-content:center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   }
   .step-title{
-    font-size: 1rem;
+    font-size: 0.86rem;
     font-weight: bold;
     color: #fff;
-  }
-  .step-sub{
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-top: 1px;
   }
 
   .row{
@@ -147,12 +136,12 @@
   }
 
   button, .btn{
-    font-family: 'SolaimanLipi-Bold','Noto Sans Bengali', system-ui, -apple-system, sans-serif;
+    font-family: inherit;
     font-weight: bold;
     border: none;
-    border-radius: 12px;
-    padding: 13px 18px;
-    font-size: 0.95rem;
+    border-radius: 11px;
+    padding: 11px 16px;
+    font-size: 0.88rem;
     cursor: pointer;
     transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
   }
@@ -170,9 +159,9 @@
     background: linear-gradient(135deg, var(--gold-soft), var(--gold));
     color: #2b1d02;
     width: 100%;
-    font-size: 1.08rem;
-    padding: 17px 18px;
-    box-shadow: 0 10px 26px rgba(212,175,90,0.35);
+    font-size: 0.98rem;
+    padding: 13px 18px;
+    box-shadow: 0 8px 20px rgba(212,175,90,0.35);
   }
   .btn-gold:hover{ filter: brightness(1.05); }
   .btn-gold:disabled{
@@ -191,9 +180,9 @@
   input[type="text"]{
     width: 100%;
     font-family: 'SolaimanLipi-Bold','Noto Sans Bengali', sans-serif;
-    font-size: 1.1rem;
-    padding: 13px 14px;
-    border-radius: 12px;
+    font-size: 1rem;
+    padding: 10px 12px;
+    border-radius: 11px;
     border: 1px solid rgba(255,255,255,0.15);
     background: rgba(0,0,0,0.2);
     color: #fff;
@@ -209,7 +198,7 @@
     display:flex;
     align-items:center;
     gap: 10px;
-    margin-top: 14px;
+    margin-top: 6px;
   }
   .slider-row label{
     font-size: 0.85rem;
@@ -224,25 +213,26 @@
   }
 
   .hint{
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--muted);
-    margin-top: 10px;
-    line-height:1.55;
+    margin-top: 4px;
+    line-height:1.35;
   }
 
   .char-count{
     text-align:right;
-    font-size: 0.72rem;
+    font-size: 0.66rem;
     color: var(--muted);
-    margin-top: 5px;
+    margin-top: 2px;
   }
 
   footer{
     text-align:center;
     color: var(--muted);
-    font-size: 0.73rem;
-    margin-top: 26px;
-    line-height: 1.6;
+    font-size: 0.64rem;
+    margin-top: 6px;
+    line-height: 1.4;
+    opacity: 0.8;
   }
 
   #file-input{ display:none; }
@@ -262,7 +252,7 @@
     position: fixed;
     left: 0; right: 0; bottom: 0;
     z-index: 50;
-    padding: 16px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px));
     background: linear-gradient(180deg, rgba(7,33,31,0) 0%, var(--teal-900) 38%, var(--teal-900) 100%);
   }
   .bottom-bar-inner{
@@ -271,10 +261,10 @@
   }
   .bottom-bar .hint{
     text-align:center;
-    margin: 8px 0 0;
+    margin: 5px 0 0;
   }
 
-  body{ padding-bottom: 128px; }
+  body{ padding-bottom: 72px; }
 </style>
 </head>
 <body>
@@ -283,7 +273,6 @@
   <header>
     <h1>ফটো কার্ড মেকার</h1>
     <p>ছবি আপলোড করুন, নাম লিখুন — নিজের কার্ড বানিয়ে নিন</p>
-    <div class="rule"></div>
   </header>
 
   <div class="card-stage" id="stage">
@@ -296,10 +285,7 @@
   <div class="panel">
     <div class="step-head">
       <div class="step-num">১</div>
-      <div>
-        <div class="step-title">ছবি আপলোড করুন</div>
-        <div class="step-sub">নিজের ছবি বেছে নিয়ে বক্সে বসান</div>
-      </div>
+      <div class="step-title">ছবি আপলোড করুন</div>
     </div>
     <div class="row">
       <button class="btn-primary" id="pick-photo-btn">📷 ছবি বেছে নিন</button>
@@ -313,23 +299,20 @@
         <input type="range" id="zoom-slider" min="1" max="3" step="0.01" value="1">
       </div>
     </div>
-    <p class="hint">আপলোডের পর ছবি টেনে (ড্র্যাগ করে) সঠিক জায়গায় বসান, এবং জুম স্লাইডার দিয়ে ছোট-বড় করুন।</p>
+    <p class="hint">ছবি টেনে (ড্র্যাগ করে) জায়গা ঠিক করুন, জুম দিয়ে ছোট-বড় করুন।</p>
   </div>
 
   <div class="panel" id="name-panel">
     <div class="step-head">
       <div class="step-num">২</div>
-      <div>
-        <div class="step-title">নাম লিখুন</div>
-        <div class="step-sub">কার্ডে আপনার নাম দেখানো হবে</div>
-      </div>
+      <div class="step-title">নাম লিখুন</div>
     </div>
     <input type="text" id="name-input" placeholder="এখানে আপনার নাম লিখুন..." maxlength="40">
     <div class="char-count"><span id="char-count">0</span>/40</div>
   </div>
 
   <footer>
-    সম্পূর্ণ প্রসেসিং আপনার ব্রাউজারেই হয় — কোনো ছবি বা তথ্য সার্ভারে পাঠানো হয় না।
+    সম্পূর্ণ প্রসেসিং আপনার ব্রাউজারেই হয় — কোনো ছবি সার্ভারে যায় না।
   </footer>
 </div>
 
@@ -343,48 +326,37 @@
 <script>
 (function(){
 
-  // ---------- Geometry (3282x3283 canvas) ----------
-  const CANVAS_W = 3282;
-  const CANVAS_H = 3283;
-  const SCALE_X = CANVAS_W / 2576;
-  const SCALE_Y = CANVAS_H / 2576;
-  const SCALE_AVG = (SCALE_X + SCALE_Y) / 2;
+  // ---------- Geometry (native pixel coordinates measured on assets/bg2.jpg, 2576x2576) ----------
+  const NATIVE_SIZE = 2576;
 
-  // ছবি বসার ফ্রেম (ওপরে তোলা ও কোনা আরও গোল করা হয়েছে)
-  const PHOTO_BOX = {
-    x: Math.round(92 * SCALE_X),
-    y: Math.round(1215 * SCALE_Y),
-    w: Math.round(670 * SCALE_X),
-    h: Math.round(824 * SCALE_Y),
-    r: Math.round(75 * SCALE_AVG)
-  };
+  // Photo placeholder box (outer border bbox measured at x:89-783, y:1080-2021)
+  // Inner fill area is slightly inset so the original red border stays fully visible.
+  const PHOTO_BOX = { x: 93, y: 1194, w: 686, h: 823, r: 165 };
 
-  // নামের জায়গা
-  const NAME_AREA = {
-    x: Math.round(100 * SCALE_X),
-    y: Math.round(2065 * SCALE_Y),
-    w: Math.round(1850 * SCALE_X),
-    h: Math.round(260 * SCALE_Y)
-  };
+  // The original design has no name field. This is a blank area of plain
+  // background directly below the photo box (measured clear of all artwork,
+  // between the box's bottom border and the printed "আপনারা সকলেই আমন্ত্রিত!" line),
+  // used to place the user's name without touching any existing element.
+  const NAME_AREA = { x: 100, y: 2065, w: 1850, h: 260 };
   const NAME_CENTER_X = NAME_AREA.x + NAME_AREA.w / 2;
   const NAME_CENTER_Y = NAME_AREA.y + NAME_AREA.h / 2;
-  const NAME_MAX_WIDTH = NAME_AREA.w - Math.round(60 * SCALE_X);
-  const NAME_MAX_FONT = Math.round(150 * SCALE_AVG);
-  const NAME_MIN_FONT = Math.round(48 * SCALE_AVG);
+  const NAME_MAX_WIDTH = NAME_AREA.w - 60;
+  const NAME_MAX_FONT = 150;
+  const NAME_MIN_FONT = 48;
   const NAME_COLOR = '#7a1211';
 
   // ---------- State ----------
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = CANVAS_W;
-  canvas.height = CANVAS_H;
+  canvas.width = NATIVE_SIZE;
+  canvas.height = NATIVE_SIZE;
 
   const bgImg = new Image();
   let bgReady = false;
 
-  let photo = null;
-  let zoom = 1;
-  let panX = 0, panY = 0;
+  let photo = null; // {img, naturalW, naturalH}
+  let zoom = 1;       // 1..3 relative to cover-fit
+  let panX = 0, panY = 0; // in native px, relative to box center
   let baseScale = 1;
 
   let nameText = '';
@@ -465,7 +437,8 @@
     ctx.textBaseline = 'middle';
     ctx.fillText(nameText, NAME_CENTER_X, NAME_CENTER_Y + size * 0.06);
 
-    const lineW = Math.min(NAME_MAX_WIDTH * 0.5, ctx.measureText(nameText).width + 80 * SCALE_X);
+    // small decorative underline to make the added name feel designed-in
+    const lineW = Math.min(NAME_MAX_WIDTH * 0.5, ctx.measureText(nameText).width + 80);
     const lineY = NAME_CENTER_Y + size * 0.62;
     const grad = ctx.createLinearGradient(NAME_CENTER_X - lineW / 2, 0, NAME_CENTER_X + lineW / 2, 0);
     grad.addColorStop(0, 'rgba(212,175,90,0)');
@@ -477,12 +450,13 @@
 
   function redraw(){
     if (!bgReady) return;
-    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
-    ctx.drawImage(bgImg, 0, 0, CANVAS_W, CANVAS_H);
+    ctx.clearRect(0, 0, NATIVE_SIZE, NATIVE_SIZE);
+    ctx.drawImage(bgImg, 0, 0, NATIVE_SIZE, NATIVE_SIZE);
     drawPhoto();
     drawName();
   }
 
+  // ---------- Load background ----------
   bgImg.onload = function(){
     bgReady = true;
     loadingOverlay.classList.add('hidden');
@@ -492,16 +466,18 @@
   bgImg.onerror = function(){
     loadingOverlay.innerHTML = 'ডিজাইন লোড করা যায়নি।';
   };
-  bgImg.src = 'bg2.jpg';
+  bgImg.src = 'assets/bg2.jpg';
 
+  // ---------- Load custom font ----------
   if ('fonts' in document){
-    const f = new FontFace('SolaimanLipi-Bold', "url('SolaimanLipi-Bold.ttf')", { weight: 'bold' });
+    const f = new FontFace('SolaimanLipi-Bold', "url('assets/SolaimanLipi-Bold.ttf')", { weight: 'bold' });
     f.load().then(function(loaded){
       document.fonts.add(loaded);
       redraw();
-    }).catch(function(){});
+    }).catch(function(){ /* fallback font will be used */ });
   }
 
+  // ---------- Photo upload ----------
   pickPhotoBtn.addEventListener('click', function(){ fileInput.click(); });
 
   fileInput.addEventListener('change', function(e){
@@ -527,6 +503,7 @@
       alert('ছবিটি লোড করা গেল না। অন্য ছবি দিয়ে আবার চেষ্টা করুন।');
     };
     img.src = url;
+    // allow re-selecting the same file later
     fileInput.value = '';
   });
 
@@ -545,18 +522,14 @@
     redraw();
   });
 
+  // ---------- Drag to reposition photo (mouse + touch) ----------
   let dragging = false;
   let dragStartX = 0, dragStartY = 0;
   let startPanX = 0, startPanY = 0;
 
-  function canvasScaleRatioX(){
+  function canvasScaleRatio(){
     const rect = canvas.getBoundingClientRect();
-    return CANVAS_W / rect.width;
-  }
-
-  function canvasScaleRatioY(){
-    const rect = canvas.getBoundingClientRect();
-    return CANVAS_H / rect.height;
+    return NATIVE_SIZE / rect.width;
   }
 
   function pointerPos(e){
@@ -567,8 +540,9 @@
   }
 
   function insideBox(px, py){
-    const nx = px * canvasScaleRatioX();
-    const ny = py * canvasScaleRatioY();
+    const ratio = canvasScaleRatio();
+    const nx = px * ratio;
+    const ny = py * ratio;
     return nx >= PHOTO_BOX.x && nx <= PHOTO_BOX.x + PHOTO_BOX.w &&
            ny >= PHOTO_BOX.y && ny <= PHOTO_BOX.y + PHOTO_BOX.h;
   }
@@ -588,8 +562,9 @@
   function dragMove(e){
     if (!dragging) return;
     const p = pointerPos(e);
-    panX = startPanX + (p.x - dragStartX) * canvasScaleRatioX();
-    panY = startPanY + (p.y - dragStartY) * canvasScaleRatioY();
+    const ratio = canvasScaleRatio();
+    panX = startPanX + (p.x - dragStartX) * ratio;
+    panY = startPanY + (p.y - dragStartY) * ratio;
     clampPan();
     redraw();
     e.preventDefault();
@@ -614,6 +589,7 @@
   }, { passive: false });
   canvas.addEventListener('touchend', dragEnd);
 
+  // Pinch to zoom
   let pinchStartDist = null;
   let pinchStartZoom = 1;
   function dist(t0, t1){
@@ -639,11 +615,30 @@
     redraw();
   }
 
+  // ---------- Name input ----------
   nameInput.addEventListener('input', function(){
     nameText = nameInput.value.trim();
     charCount.textContent = nameInput.value.length;
     redraw();
   });
+
+  // ---------- Download ----------
+  // Works two ways: inside the Claude artifact preview sandbox, plain
+  // <a download> links don't save anything, so we use the `downloads`
+  // capability there; on a normal host (GitHub Pages, local file, etc.)
+  // window.claude is absent and we fall back to the ordinary anchor download.
+  async function saveViaClaudeCapability(blob, filename){
+    try {
+      if (window.claude && typeof window.claude.use === 'function'){
+        const downloads = await window.claude.use('downloads');
+        if (downloads){
+          await downloads.save({ filename: filename, data: blob });
+          return true;
+        }
+      }
+    } catch (e){ /* fall through to the normal download */ }
+    return false;
+  }
 
   function saveViaAnchor(blob, filename){
     const link = document.createElement('a');
@@ -656,13 +651,16 @@
   }
 
   downloadBtn.addEventListener('click', function(){
-    canvas.toBlob(function(blob){
+    canvas.toBlob(async function(blob){
       if (!blob){
         alert('ডাউনলোড তৈরি করা যায়নি। আবার চেষ্টা করুন।');
         return;
       }
       const fileName = (nameText ? nameText.replace(/[^\wঀ-৿\- ]/g, '').trim().replace(/\s+/g, '-') : 'photo-card') + '.png';
-      saveViaAnchor(blob, fileName);
+      const savedByCapability = await saveViaClaudeCapability(blob, fileName);
+      if (!savedByCapability){
+        saveViaAnchor(blob, fileName);
+      }
     }, 'image/png', 1.0);
   });
 
@@ -670,3 +668,5 @@
 </script>
 </body>
 </html>
+
+</body></html>
