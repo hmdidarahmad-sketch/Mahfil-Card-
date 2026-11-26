@@ -8,7 +8,7 @@
 <style>
   @font-face {
     font-family: 'SolaimanLipi-Bold';
-    src: url('assets/SolaimanLipi-Bold.ttf') format('truetype');
+    src: url('SolaimanLipi-Bold.ttf') format('truetype');
     font-weight: bold;
     font-display: swap;
   }
@@ -356,7 +356,7 @@
 <script>
 (function(){
 
-  // ---------- Geometry (native pixel coordinates measured on assets/bg2.jpg, 2576x2576) ----------
+  // ---------- Geometry (native pixel coordinates measured on bg2.jpg, 2576x2576) ----------
   const NATIVE_SIZE = 2576;
 
   // Photo placeholder box (outer border bbox measured at x:89-783, y:1080-2021)
@@ -496,11 +496,11 @@
   bgImg.onerror = function(){
     loadingOverlay.innerHTML = 'ডিজাইন লোড করা যায়নি।';
   };
-  bgImg.src = 'assets/bg2.jpg';
+  bgImg.src = 'bg2.jpg';
 
   // ---------- Load custom font ----------
   if ('fonts' in document){
-    const f = new FontFace('SolaimanLipi-Bold', "url('assets/SolaimanLipi-Bold.ttf')", { weight: 'bold' });
+    const f = new FontFace('SolaimanLipi-Bold', "url('SolaimanLipi-Bold.ttf')", { weight: 'bold' });
     f.load().then(function(loaded){
       document.fonts.add(loaded);
       redraw();
