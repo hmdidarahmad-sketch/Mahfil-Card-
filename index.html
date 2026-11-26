@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -356,17 +355,13 @@
 <script>
 (function(){
 
-  // ---------- Geometry (native pixel coordinates measured on bg2.jpg, 2576x2576) ----------
+  // ---------- Geometry (2576x2576 canvas) ----------
   const NATIVE_SIZE = 2576;
 
-  // Photo placeholder box (outer border bbox measured at x:89-783, y:1080-2021)
-  // Inner fill area is slightly inset so the original red border stays fully visible.
-  const PHOTO_BOX = { x: 101, y: 1092, w: 670, h: 917, r: 65 };
+  // আপডেট করা ফটো বক্স (ছবি ফ্রেমের ভেতরে ঠিকভাবে বসানোর জন্য ছোট ও সমন্বিত মাপ)
+  const PHOTO_BOX = { x: 85, y: 1210, w: 515, h: 685, r: 45 };
 
-  // The original design has no name field. This is a blank area of plain
-  // background directly below the photo box (measured clear of all artwork,
-  // between the box's bottom border and the printed "আপনারা সকলেই আমন্ত্রিত!" line),
-  // used to place the user's name without touching any existing element.
+  // নামের জায়গা
   const NAME_AREA = { x: 100, y: 2065, w: 1850, h: 260 };
   const NAME_CENTER_X = NAME_AREA.x + NAME_AREA.w / 2;
   const NAME_CENTER_Y = NAME_AREA.y + NAME_AREA.h / 2;
@@ -467,7 +462,6 @@
     ctx.textBaseline = 'middle';
     ctx.fillText(nameText, NAME_CENTER_X, NAME_CENTER_Y + size * 0.06);
 
-    // small decorative underline to make the added name feel designed-in
     const lineW = Math.min(NAME_MAX_WIDTH * 0.5, ctx.measureText(nameText).width + 80);
     const lineY = NAME_CENTER_Y + size * 0.62;
     const grad = ctx.createLinearGradient(NAME_CENTER_X - lineW / 2, 0, NAME_CENTER_X + lineW / 2, 0);
@@ -504,7 +498,7 @@
     f.load().then(function(loaded){
       document.fonts.add(loaded);
       redraw();
-    }).catch(function(){ /* fallback font will be used */ });
+    }).catch(function(){});
   }
 
   // ---------- Photo upload ----------
@@ -533,7 +527,6 @@
       alert('ছবিটি লোড করা গেল না। অন্য ছবি দিয়ে আবার চেষ্টা করুন।');
     };
     img.src = url;
-    // allow re-selecting the same file later
     fileInput.value = '';
   });
 
@@ -653,10 +646,6 @@
   });
 
   // ---------- Download ----------
-  // Works two ways: inside the Claude artifact preview sandbox, plain
-  // <a download> links don't save anything, so we use the `downloads`
-  // capability there; on a normal host (GitHub Pages, local file, etc.)
-  // window.claude is absent and we fall back to the ordinary anchor download.
   async function saveViaClaudeCapability(blob, filename){
     try {
       if (window.claude && typeof window.claude.use === 'function'){
@@ -666,7 +655,7 @@
           return true;
         }
       }
-    } catch (e){ /* fall through to the normal download */ }
+    } catch (e){}
     return false;
   }
 
@@ -698,5 +687,3 @@
 </script>
 </body>
 </html>
-
-</body></html>
